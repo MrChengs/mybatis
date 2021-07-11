@@ -1,0 +1,4 @@
+1,department表中的主键code设置了自增；然后在insertDept中配置<useGeneratedKeys="true" keyProperty="code" keyColumn="code">
+  发现主键code并没有自动生成（报红 Field 'code' doesn't have a default value），还是需要在insert中给code赋值才可以；
+
+2,insert语句是否只能返回Lone/Integer/Boolean类型，不能返回其他类型？？

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lg.mapper.BoundAuthorMapper">
+    <select id="findPostsInArray" parameterType="list" resultType="Post">
+        select * from post where id in
+            <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </select>
+
+    <select id="findPostsInList" parameterType="list" resultType="Post">
+        select * from post where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <sql id="selectSpecific">
+        select id as AUTHOR_ID,username as AUTHOR_USERNAME,password as AUTHOR_PASSWORD,
+               email as AUTHOR_EMAIL,bio as AUTHOR_BIO from author where id=#{id}
+    </sql>
+    <select id="selectAuthor" parameterType="int" resultMap="alianResult">
+        <include refid="selectSpecific"></include>
+    </select>
+    <resultMap id="alianResult" type="Author">
+        <constructor>
+            <arg column="AUTHOR_ID" javaType="int"></arg>
+        </constructor>
+        <result property="username" column="AUTHOR_USERNAME"></result>
+        <result property="password" column="AUTHOR_PASSWORD"></result>
+        <result property="email" column="AUTHOR_EMAIL"></result>
+        <result property="bio" column="AUTHOR_BIO"></result>
+    </resultMap>
+
+    <select id="selectAuthorMapToPropertiesUsingRepeatable" resultMap="hasConstructorResult">
+        <include refid="selectSpecific"></include>
+    </select>
+    <resultMap id="hasConstructorResult" type="Author">
+        <id property="id" column="AUTHOR_ID"></id>
+        <result property="username" column="AUTHOR_USERNAME"></result>
+        <result property="password" column="AUTHOR_PASSWORD"></result>
+        <result property="email" column="AUTHOR_EMAIL"></result>
+        <result property="bio" column="AUTHOR_BIO"></result>
+    </resultMap>
+
+    <insert id="insertAuthor" parameterType="Author">
+
+    </insert>
+    <insert id="insertAuthorInvalidSelectKey" parameterType="Author">
+
+    </insert>
+
+    <insert id="insertAuthorInvalidInsert" parameterType="Author">
+
+    </insert>
+    <insert id="insertAuthorDynamic" parameterType="Author">
+
+    </insert>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    标签顺序需要按照properties settings typeAliases typeHandlers objectFactory plugins environments databaseIdProvider mappers的顺序 否则会报错-->
+    <properties resource="jdbc.properties"></properties>
+    <settings>
+<!--    二级缓存   -->
+        <setting name="cacheEnabled" value="true"/>
+<!--       延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+<!--        主键生成策略-->
+        <setting name="useGeneratedKeys" value="false"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="defaultStatementTimeout" value="25"/>
+        <setting name="defaultFetchSize" value="100"/>
+        <setting name="safeRowBoundsEnabled" value="false"/>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+        <setting name="localCacheScope" value="SESSION"/>
+        <setting name="jdbcTypeForNull" value="OTHER"/>
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+    </settings>
+<!--    别名-->
+    <typeAliases>
+        <package name="com.lg.pojo"/>
+    </typeAliases>
+   <environments default="development">
+       <environment id="development">
+<!--           MyBatis中两种类型的事务管理器 JDBC/MANAGED
+JDBC – 这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。
+MANAGED – 这个配置几乎没做什么。它从不提交或回滚一个连接，而是让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。
+默认情况下它会关闭连接。然而一些容器并不希望连接被关闭，因此需要将 closeConnection 属性设置为 false 来阻止默认的关闭行为
+-->
+           <transactionManager type="JDBC"></transactionManager>
+<!--           有三种内置的数据源 UNPOOLED/POOLED/JNDI
+UNPOOLED– 数据源的实现会每次请求时打开和关闭连接。虽然有点慢，但对那些数据库连接可用性要求不高的简单应用程序来说，是一个很好的选择。
+性能表现则依赖于使用的数据库，对某些数据库来说，使用连接池并不重要，这个配置就很适合这种情形。UNPOOLED 类型的数据源仅仅需要配置 5 种属性：
+[driver url username password defaultTransactionIsolationLevel defaultNetworkTimeout],也可增加可选项如 driver.encoding=UTF8
+
+POOLED– 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。 这种处理方式很流行，能使并发 Web 应用快速响应请求。
+除了上述UNPOOLED的属性外还需要一些额外的配置如[poolMaximumActiveConnections(10) poolMaximumIdleConnections poolMaximumCheckoutTime(20000ms)
+poolTimeToWait]
+
+JNDI – 这个数据源实现是为了能在如 EJB 或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个 JNDI 上下文的数据源引用
+-->
+<!--           type的取值-->
+           <dataSource type="POOLED" >
+               <property name="driver" value="com.mysql.jdbc.Driver"/>
+               <property name="url" value="jdbc:mysql://localhost:3306/sql_training?characterEncoding=utf-8"/>
+               <property name="username" value="root"/>
+               <property name="password" value="123456"/>
+           </dataSource>
+       </environment>
+   </environments>
+    <mappers>
+        <package name="com.lg.mapper"/>
+    </mappers>
+</configuration>
