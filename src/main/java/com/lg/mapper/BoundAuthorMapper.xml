@@ -46,16 +46,47 @@
     </resultMap>
 
     <insert id="insertAuthor" parameterType="Author">
-
+/*主键若为自增 order应为before
+  主键若不是自增  order应为after*/
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="BEFORE">
+            select auto_increment from information_schema.tables where table_name="author" and table_schema='mybatis_demo'
+        </selectKey>
+        insert into Author (username,password,email,bio,favourite_section)
+        values(
+                  #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+              )
     </insert>
     <insert id="insertAuthorInvalidSelectKey" parameterType="Author">
-
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="BEFORE">
+            select auto_increment from information_schema.tables where table_name="author" and table_schema='mybatis_demo'
+        </selectKey>
+        insert into Author (username,password,email,bio,favourite_section)
+        values(
+        #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+        )
     </insert>
 
     <insert id="insertAuthorInvalidInsert" parameterType="Author">
-
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="BEFORE">
+            select auto_increment from information_schema.tables where table_name="author" and table_schema='mybatis_demo'
+        </selectKey>
+        insert into Author (username,password,email,bio,favourite_section)
+        values(
+        #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+        )
     </insert>
     <insert id="insertAuthorDynamic" parameterType="Author">
-
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="BEFORE">
+            select auto_increment from information_schema.tables where table_name="author" and table_schema='mybatis_demo'
+        </selectKey>
+        insert into Author (username,password,email,bio,favourite_section)
+        values(
+        #{username}, #{password}, #{email}, #{bio}, #{favouriteSection:VARCHAR}
+        )
     </insert>
+
+    <select id="findThreeSpecificPosts" resultType="Post">
+        select * from post
+        where id in(#{one},#{two},#{2})
+    </select>
 </mapper>

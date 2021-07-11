@@ -3,6 +3,8 @@ package com.lg.test.sql;
 import com.lg.mapper.BoundAuthorMapper;
 import com.lg.pojo.Author;
 import com.lg.pojo.Post;
+import com.lg.pojo.Section;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
@@ -60,5 +62,45 @@ public class BoundAuthorMapperTest {
         BoundAuthorMapper mapper = sqlSessionFactory.getConfiguration().getMapperRegistry().getMapper(BoundAuthorMapper.class, sqlSession);
         Author author = mapper.selectAuthorMapToPropertiesUsingRepeatable(102);
         assert author.getId() == 102;
+    }
+
+    /**
+     * 插入后返回获取主键id的值
+     */
+    @Test
+    public void insertAuthor(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        BoundAuthorMapper mapper = sqlSession.getMapper(BoundAuthorMapper.class);
+        Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+        int row = mapper.insertAuthor(author);
+        assert author.getId() != -1;
+        sqlSession.rollback();
+    }
+
+    @Test
+    public void insertAuthorInvalidSelectKey(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            BoundAuthorMapper mapper = sqlSession.getMapper(BoundAuthorMapper.class);
+            Author author = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+            int row = mapper.insertAuthorInvalidSelectKey(author);
+            assert author.getId() != -1;
+        }
+        finally {
+            sqlSession.rollback();
+        }
+    }
+
+    @Test
+    public void findThreeSpecificPosts(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            BoundAuthorMapper mapper = sqlSession.getMapper(BoundAuthorMapper.class);
+            RowBounds rowBounds = new RowBounds(1,1);
+            List<Post> threeSpecificPosts = mapper.findThreeSpecificPosts(0, rowBounds, 1, 2);
+            assert threeSpecificPosts.size() > 0;
+        }finally {
+
+        }
     }
 }
