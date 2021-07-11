@@ -1,9 +1,11 @@
 package com.lg.mapper;
 
+import com.lg.pojo.Author;
 import com.lg.pojo.Blog;
 import com.lg.pojo.Post;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.mapping.FetchType;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
@@ -82,19 +84,19 @@ public interface BoundBlogMapper {
 //    )
     List<Post> selectPostsWithResultMap();
 
-//    @Select("SELECT * FROM " +
-//            "blog WHERE id = #{id}")
+    @Select("SELECT * FROM " +
+            "blog WHERE id = #{id}")
     Blog selectBlog(int id);
 
 
-//    @Select("SELECT * FROM " +
-//            "blog WHERE id = #{id}")
-//    @ConstructorArgs({
-//            @Arg(column = "id", javaType = int.class, id = true),
-//            @Arg(column = "title", javaType = String.class),
-//            @Arg(column = "author_id", javaType = Author.class, select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor"),
-//            @Arg(column = "id", javaType = List.class, select = "selectPostsForBlog")
-//    })
+    @Select("SELECT * FROM " +
+            "blog WHERE id = #{id}")
+    @ConstructorArgs({
+            @Arg(column = "id", javaType = int.class, id = true),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "author_id", javaType = Author.class, select = "com.lg.mapper.BoundAuthorMapper.selectAuthor"),
+            @Arg(column = "id", javaType = List.class, select = "selectPostsForBlog")
+    })
     Blog selectBlogUsingConstructor(int id);
 
     Blog selectBlogUsingConstructorWithResultMap(int i);
@@ -105,68 +107,68 @@ public interface BoundBlogMapper {
 
     Blog selectBlogByIdUsingConstructor(int id);
 
-//    @Select("SELECT * FROM " +
-//            "blog WHERE id = #{id}")
+    @Select("SELECT * FROM " +
+            "blog WHERE id = #{id}")
     Map<String,Object> selectBlogAsMap(Map<String,Object> params);
 
 
-//    @Select("SELECT * FROM " +
-//            "post WHERE subject like #{query}")
+    @Select("SELECT * FROM " +
+            "post WHERE subject like #{query}")
     List<Post> selectPostsLike(RowBounds bounds, String query);
 
 
-//    @Select("SELECT * FROM " +
-//            "post WHERE subject like #{subjectQuery} and body like #{bodyQuery}")
+    @Select("SELECT * FROM " +
+            "post WHERE subject like #{subjectQuery} and body like #{bodyQuery}")
     List<Post> selectPostsLikeSubjectAndBody(RowBounds bounds,
                                              @Param("subjectQuery") String subjectQuery,
                                              @Param("bodyQuery") String bodyQuery);
 
-//    @Select("SELECT * FROM " +
-//            "post WHERE id = #{id}")
+    @Select("SELECT * FROM " +
+            "post WHERE id = #{id}")
     List<Post> selectPostsById(int id);
 
 
-//    @Select("SELECT * FROM blog " +
-//            "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
+    @Select("SELECT * FROM blog " +
+            "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
     Blog selectBlogByNonExistentParam(@Param("id") int id);
 
-//    @Select("SELECT * FROM blog " +
-//            "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
+    @Select("SELECT * FROM blog " +
+            "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
     Blog selectBlogByNonExistentNestedParam(@Param("id") int id, @Param("params") Map<String, Object> params);
 
-//    @Select("SELECT * FROM blog WHERE id = #{id}")
+    @Select("SELECT * FROM blog WHERE id = #{id}")
     Blog selectBlogByNullParam(Integer id);
 
 
-//    @Select("SELECT * FROM blog " +
-//            "WHERE id = #{0} AND title = #{1}")
+    @Select("SELECT * FROM blog " +
+            "WHERE id = #{0} AND title = #{1}")
     Blog selectBlogByDefault30ParamNames(int id, String title);
 
-//    @Select("SELECT * FROM blog " +
-//            "WHERE id = #{param1} AND title = #{param2}")
+    @Select("SELECT * FROM blog " +
+            "WHERE id = #{param1} AND title = #{param2}")
     Blog selectBlogByDefault31ParamNames(int id, String title);
 
-//    @Select("SELECT * FROM blog " +
-//            "WHERE ${column} = #{id} AND title = #{value}")
+    @Select("SELECT * FROM blog " +
+            "WHERE ${column} = #{id} AND title = #{value}")
     Blog selectBlogWithAParamNamedValue(@Param("column") String column, @Param("id") int id, @Param("value") String title);
 
-//    @Select({
-//            "SELECT *",
-//            "FROM blog"
-//    })
-//    @Results({
-//            @Result(property = "author", column = "author_id", one = @One(select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor")),
-//            @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById"))
-//    })
+    @Select({
+            "SELECT *",
+            "FROM blog"
+    })
+    @Results({
+            @Result(property = "author", column = "author_id", one = @One(select = "com.lg.mapper.BoundAuthorMapper.selectAuthor")),
+            @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById"))
+    })
     List<Blog> selectBlogsWithAutorAndPosts();
 
-//    @Select({
-//            "SELECT *",
-//            "FROM blog"
-//    })
-//    @Results({
-//            @Result(property = "author", column = "author_id", one = @One(select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor", fetchType= FetchType.EAGER)),
-//            @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById", fetchType=FetchType.EAGER))
-//    })
+    @Select({
+            "SELECT *",
+            "FROM blog"
+    })
+    @Results({
+            @Result(property = "author", column = "author_id", one = @One(select = "com.lg.mapper.BoundAuthorMapper.selectAuthor", fetchType= FetchType.EAGER)),
+            @Result(property = "posts", column = "id", many = @Many(select = "selectPostsById", fetchType= FetchType.EAGER))
+    })
     List<Blog> selectBlogsWithAutorAndPostsEagerly();
 }

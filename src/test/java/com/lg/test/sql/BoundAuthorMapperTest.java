@@ -103,4 +103,16 @@ public class BoundAuthorMapperTest {
 
         }
     }
+
+    @Test
+    public void selectAuthorConstructor(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            BoundAuthorMapper mapper = sqlSession.getMapper(BoundAuthorMapper.class);
+            Author author = mapper.selectAuthorConstructor(102);
+            assert author.getId() == 102;
+        }finally {
+
+        }
+    }
 }
